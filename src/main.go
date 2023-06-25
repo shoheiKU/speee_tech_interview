@@ -25,7 +25,8 @@ func fibonacciHandler(w http.ResponseWriter, r *http.Request) {
 			v := []byte(fmt.Sprintf(`{
 	"status": 500,
 	"message": "internal server error: %v"
-}`, e))
+}
+`, e))
 			w.WriteHeader(http.StatusInternalServerError)
 			_, err := w.Write(v)
 			if err != nil {
@@ -38,18 +39,21 @@ func fibonacciHandler(w http.ResponseWriter, r *http.Request) {
 		v := []byte(`{
 	"status": 400,
 	"message": "Bad request (a correct example:/fib?n=5)"
-}`)
+}
+`)
 		w.WriteHeader(http.StatusBadRequest)
 		_, err = w.Write(v)
 		if err != nil {
 			log.Fatal(err)
 		}
+		return
 	}
 	n = fibonacci(n, 1, 0)
 	// ret := []byte(fmt.Sprintf("{\n\t\"result\": %d\n}", n))
 	ret := []byte(fmt.Sprintf(`{
 	"result": %d
-}`, n))
+}
+`, n))
 	_, err = w.Write(ret)
 	if err != nil {
 		log.Fatal(err)
@@ -59,5 +63,5 @@ func fibonacciHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/fib", fibonacciHandler)
 	fmt.Println("Server Start Up........")
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
